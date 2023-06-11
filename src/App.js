@@ -1,34 +1,58 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-const Father = styled.div`
+const rotationAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+    border-radius: 0%;
+  }
+  50% {
+    transform: rotate(180deg);
+    border-radius: 50%;
+  }
+  100% {
+    transform: rotate(360deg);
+    border-radius: 0%
+  }
+`;
+
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
   display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-const Btn = styled.button`
-  color: white;
-  background-color: blue;
-  border: 0;
-  padding: 10px;
-  border-radius: 15px;
-`;
+const Box = styled.div`
+  width: 200px;
+  height: 200px;
+  background-color: tomato;
 
-const Input = styled.input.attrs({ required: true, minLength: 10 })`
-  background-color: whitesmoke;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-size: 36px;
+
+    &:hover {
+      font-size: 72px;
+    }
+    &:active {
+      opacity: 0;
+    }
+  }
+
+  animation: ${rotationAnimation} 1s linear infinite;
 `;
 
 function App() {
   return (
-    <Father as="header">
-      <Btn>Log In</Btn>
-      <Btn as="a" href="https://www.notion.so/" target="_blank">
-        Go To Notion
-      </Btn>
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-    </Father>
+    <Wrapper>
+      <Box>
+        <span>🤑</span>
+      </Box>
+    </Wrapper>
   );
 }
 
