@@ -64,6 +64,7 @@ body {
 }
 a {
   text-decoration: none;
+  color: inherit; // inherit: 부모로부터 가져 온다.
 }
 `;
 
