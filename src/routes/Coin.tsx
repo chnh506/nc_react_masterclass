@@ -36,12 +36,70 @@ interface RouteState {
   name: string;
 }
 
+interface IInfoData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  is_new: boolean;
+  is_active: boolean;
+  type: string;
+  logo: string;
+  description: string;
+  message: string;
+  open_source: boolean;
+  started_at: string;
+  development_status: string;
+  hardware_wallet: boolean;
+  proof_type: string;
+  org_structure: string;
+  hash_algorithm: string;
+  first_data_at: string;
+  last_data_at: string;
+}
+
+interface IPriceData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number;
+  beta_value: number;
+  first_data_at: string;
+  last_updated: string;
+  quotes: {
+    USD: {
+      ath_date: string;
+      ath_price: number;
+      market_cap: number;
+      market_cap_change_24h: number;
+      percent_change_1h: number;
+      percent_change_1y: number;
+      percent_change_6h: number;
+      percent_change_7d: number;
+      percent_change_12h: number;
+      percent_change_15m: number;
+      percent_change_24h: number;
+      percent_change_30d: number;
+      percent_change_30m: number;
+      percent_from_price_ath: number;
+      price: number;
+      volume_24h: number;
+      volume_24h_change_24h: number;
+    };
+  };
+}
+
 function Coin() {
   // useParams: url의 변수를 오브젝트 형태로 return해 준다.
   // TS에서는, Generic의 형태로 Object의 타입을 지정해 줘야 되는 듯.
   const { coinId } = useParams<RouteParams>();
-  const [loading, setLoading] = useState(true);
   const { state } = useLocation<RouteState>(); // react-router-DOM이 보내 주는 location object에 접근한다.
+  const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState<IInfoData>();
+  const [priceInfo, setPriceInfo] = useState<IPriceData>();
 
   useEffect(() => {
     (async () => {
@@ -51,6 +109,9 @@ function Coin() {
       const priceData = await (
         await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
       ).json();
+      setInfo(infoData);
+      setPriceInfo(priceData);
+      setLoading(false);
     })();
   }, []);
 
@@ -59,7 +120,7 @@ function Coin() {
       <Header>
         <Title>{state?.name || "Loading"}</Title>
       </Header>
-      {loading ? <Loader>"Loading ... "</Loader> : null}
+      {loading ? <Loader>"Loading ... "</Loader> : priceInfo?.quotes.USD.price}
     </Container>
   );
 }
