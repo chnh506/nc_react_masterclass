@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Switch,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from "react-router-dom";
 import styled from "styled-components";
+import Price from "./Price";
+import Chart from "./Chart";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -50,6 +59,30 @@ const OverviewItem = styled.div`
 
 const Description = styled.p`
   margin: 20px 0px;
+`;
+
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0;
+  gap: 10px;
+`;
+
+const Tab = styled.span<{ isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 7px 0px;
+  border-radius: 10px;
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
+
+  // 감싸고 있는 전체 블록을 링크로 만들어버려서 클릭 용이하도록!
+  // 이런 사소한 디테일들 잘 챙겨가자.
+  a {
+    display: block;
+  }
 `;
 
 interface RouteParams {
@@ -124,7 +157,9 @@ function Coin() {
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState<IInfoData>();
   const [priceInfo, setPriceInfo] = useState<IPriceData>();
-
+  const priceMatch = useRouteMatch("/:coinId/price"); // react-router-dom v6에서 수정사항 o
+  const chartMatch = useRouteMatch("/:coinId/chart");
+  
   useEffect(() => {
     (async () => {
       const infoData = await (
@@ -167,16 +202,32 @@ function Coin() {
           <Description>{info?.description}</Description>
           <Overview>
             <OverviewItem>
-              <span>Price($):</span>
-              <span>{priceInfo?.quotes.USD.price}</span>
+              <span>Total Suply:</span>
+              <span>{priceInfo?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Total Supply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>Max Supply:</span>
+              <span>{priceInfo?.max_supply}</span>
             </OverviewItem>
           </Overview>
         </>
       )}
+      <Tabs>
+        <Tab isActive={priceMatch !== null}>
+          <Link to={`/${coinId}/price`}>Price</Link>
+        </Tab>
+        <Tab isActive={chartMatch !== null}>
+          <Link to={`/${coinId}/chart`}>Chart</Link>
+        </Tab>
+      </Tabs>
+      <Switch>
+        <Route path={`/${coinId}/price`}>
+          <Price />
+        </Route>
+        <Route path={`/${coinId}/chart`}>
+          <Chart />
+        </Route>
+      </Switch>
     </Container>
   );
 }
