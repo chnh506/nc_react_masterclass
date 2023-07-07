@@ -10,6 +10,8 @@ import {
 import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinTickers } from "../apifetch";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -33,7 +35,7 @@ const Loader = styled.span`
 const Title = styled.h1`
   font-size: 48px;
   font-weight: 600;
-  margin-bottom: 30px;
+  margin: 30px 0px;
   color: ${(props) => props.theme.accentColor};
 `;
 
@@ -77,6 +79,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   border-radius: 10px;
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
+  transition: color 0.3s ease-in-out; // 요 Transition이 좀 쓸만한 듯하다 ..! 잘 우려먹어보자.
 
   // 감싸고 있는 전체 블록을 링크로 만들어버려서 클릭 용이하도록!
   // 이런 사소한 디테일들 잘 챙겨가자.
@@ -154,12 +157,14 @@ function Coin() {
   // TS에서는, Generic의 형태로 Object의 타입을 지정해 줘야 되는 듯.
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>(); // react-router-DOM이 보내 주는 location object에 접근한다.
+
+  const priceMatch = useRouteMatch("/:coinId/price"); // react-router-dom v6에서 수정사항 o
+  const chartMatch = useRouteMatch("/:coinId/chart");
+
+  /* 
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState<IInfoData>();
   const [priceInfo, setPriceInfo] = useState<IPriceData>();
-  const priceMatch = useRouteMatch("/:coinId/price"); // react-router-dom v6에서 수정사항 o
-  const chartMatch = useRouteMatch("/:coinId/chart");
-  
   useEffect(() => {
     (async () => {
       const infoData = await (
@@ -172,13 +177,23 @@ function Coin() {
       setPriceInfo(priceData);
       setLoading(false);
     })();
-  }, [coinId]);
+  }, [coinId]); 
+  */
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId)
+  );
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? "Loading ..." : info?.name}
+          {state?.name ? state.name : loading ? "Loading ..." : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -188,26 +203,26 @@ function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>${info?.symbol}</span>
+              <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{info?.open_source ? "Yes" : "No"}</span>
+              <span>{infoData?.open_source ? "Yes" : "No"}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Suply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
         </>

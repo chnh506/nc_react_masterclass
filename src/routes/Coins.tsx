@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "../apifetch";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -50,11 +51,11 @@ const CoinElem = styled.li`
 const Title = styled.h1`
   font-size: 48px;
   font-weight: 600;
-  margin-bottom: 30px;
+  margin: 30px 0px;
   color: ${(props) => props.theme.accentColor};
 `;
 
-interface CoinInterface {
+interface ICoin {
   id: string;
   name: string;
   symbol: string;
@@ -65,6 +66,7 @@ interface CoinInterface {
 }
 
 function Coins() {
+  /*
   const [coins, setCoins] = useState<CoinInterface[]>([]); // useState()에서는 Generic을 이용해 type을 지정해 준다.
   const [loading, setLoading] = useState(true); // React-query에서는 Loading을 이렇게 하지는 않음.
 
@@ -76,17 +78,22 @@ function Coins() {
       setLoading(false);
     })(); // function을 즉시 실행시킬 수 있는 trick!
   }, []);
+  */
+
+  // 아래 한 줄로, 위의 API Fetch해 오고 -> json data를 state에 넣어 주고, loading 변수 바꿔주는 모든 절차를 실행시킬 수 있다!
+  // react-query는 데이터를 캐시에 저장해 두기 때문에, 다른 screen에 갔다가 다시 'Coins’ screen으로 돌아와도 로딩이 한번 더 일어나지 않는다!!
+  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
   return (
     <Container>
       <Header>
         <Title>Coins</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>"Loading ... "</Loader>
       ) : (
         <CoinsList>
-          {coins.map((coin) => (
+          {data?.slice(0, 100).map((coin) => (
             <CoinElem key={coin.id}>
               <Link
                 to={{
