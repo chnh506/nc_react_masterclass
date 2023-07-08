@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Link,
   Route,
@@ -11,6 +10,7 @@ import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "react-query";
+import { Helmet } from "react-helmet";
 import { fetchCoinInfo, fetchCoinTickers } from "../apifetch";
 
 const Container = styled.div`
@@ -94,6 +94,7 @@ interface RouteParams {
 
 interface RouteState {
   name: string;
+  symbol: string;
 }
 
 interface IInfoData {
@@ -185,12 +186,26 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId)
+    () => fetchCoinTickers(coinId),
+    {
+      refetchInterval: 5000,
+    }
   );
   const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading ..." : infoData?.name}
+        </title>
+        <link
+          rel="icon"
+          type="image/png"
+          href={`https://coinicons-api.vercel.app/api/icon/${state.symbol}`}
+          sizes="16x16"
+        />
+      </Helmet>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading ..." : infoData?.name}
@@ -210,8 +225,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickersData?.quotes.USD.price.toFixed(2)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -240,7 +255,7 @@ function Coin() {
           <Price />
         </Route>
         <Route path={`/${coinId}/chart`}>
-          <Chart />
+          <Chart coinId={coinId} />
         </Route>
       </Switch>
     </Container>
