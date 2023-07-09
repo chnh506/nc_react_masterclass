@@ -32,28 +32,44 @@ function Chart({ coinId }: ChartProps) {
         "Loading Chart ..."
       ) : (
         <ApexCharts
-          type="line"
+          type="candlestick"
           series={[
             {
               name: "price",
-              data: data?.map((price) => parseFloat(price.close)) ?? [],
+              data:
+                data?.map((price) => {
+                  return {
+                    x: new Date(price.time_close),
+                    y: [
+                      parseFloat(price.open).toFixed(1),
+                      parseFloat(price.high).toFixed(1),
+                      parseFloat(price.low).toFixed(1),
+                      parseFloat(price.close).toFixed(1),
+                    ],
+                  };
+                }) ?? [],
             },
           ]}
           options={{
             theme: {
-              mode: "light",
+              mode: "dark",
             },
-            grid: { show: false },
+            // grid: { show: false },
             chart: {
-              width: 500,
+              type: "candlestick",
               height: 500,
+              background: "#2f3640",
               toolbar: { show: false },
+            },
+            title: {
+              text: "Price Chart",
+              align: "left",
             },
             stroke: {
               curve: "smooth",
               width: 3,
             },
-            yaxis: { show: false },
+            // yaxis: { show: false },
             xaxis: {
               axisBorder: { show: false },
               axisTicks: { show: false },

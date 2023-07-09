@@ -89,6 +89,12 @@ function Coins() {
     <Container>
       <Helmet>
         <title>Coins</title>
+        <link
+          rel="icon"
+          type="image/png"
+          href={`https://icon-library.com/images/doge-icon/doge-icon-21.jpg`}
+          sizes="16x16"
+        />
       </Helmet>
       <Header>
         <Title>Coins</Title>

@@ -12,6 +12,8 @@ import Chart from "./Chart";
 import { useQuery } from "react-query";
 import { Helmet } from "react-helmet";
 import { fetchCoinInfo, fetchCoinTickers } from "../apifetch";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -22,8 +24,16 @@ const Container = styled.div`
 const Header = styled.header`
   height: 10vh;
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
+
+  a {
+    font-size: 36px;
+    color: ${(props) => props.theme.accentColor};
+    position: absolute;
+    right: 5px;
+  }
 `;
 
 const Loader = styled.span`
@@ -210,6 +220,9 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? "Loading ..." : infoData?.name}
         </Title>
+        <Link to={`../`}>
+          <FontAwesomeIcon icon={faBackward} />
+        </Link>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
@@ -222,7 +235,7 @@ function Coin() {
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>${infoData?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Price:</span>
@@ -244,10 +257,30 @@ function Coin() {
       )}
       <Tabs>
         <Tab isActive={priceMatch !== null}>
-          <Link to={`/${coinId}/price`}>Price</Link>
+          <Link
+            to={{
+              pathname: `/${coinId}/price`,
+              state: {
+                name: infoData?.name,
+                symbol: infoData?.symbol.toLowerCase(),
+              },
+            }}
+          >
+            Price
+          </Link>
         </Tab>
         <Tab isActive={chartMatch !== null}>
-          <Link to={`/${coinId}/chart`}>Chart</Link>
+          <Link
+            to={{
+              pathname: `/${coinId}/chart`,
+              state: {
+                name: infoData?.name,
+                symbol: infoData?.symbol.toLowerCase(),
+              },
+            }}
+          >
+            Chart
+          </Link>
         </Tab>
       </Tabs>
       <Switch>
