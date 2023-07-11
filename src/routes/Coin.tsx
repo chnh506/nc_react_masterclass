@@ -84,11 +84,12 @@ const Tab = styled.span<{ isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
   font-size: 12px;
-  background-color: rgba(0, 0, 0, 0.5);
+  font-weight: 600;
+  background-color: ${(props) => props.theme.accentColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) =>
-    props.isActive ? props.theme.accentColor : props.theme.textColor};
+    props.isActive ? props.theme.bgColor : props.theme.textColor};
   transition: color 0.3s ease-in-out; // 요 Transition이 좀 쓸만한 듯하다 ..! 잘 우려먹어보자.
 
   // 감싸고 있는 전체 블록을 링크로 만들어버려서 클릭 용이하도록!
@@ -263,6 +264,7 @@ function Coin() {
               state: {
                 name: infoData?.name,
                 symbol: infoData?.symbol.toLowerCase(),
+                tickersData,
               },
             }}
           >
