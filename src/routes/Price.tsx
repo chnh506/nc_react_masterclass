@@ -1,5 +1,10 @@
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowTrendUp,
+  faArrowTrendDown,
+} from "@fortawesome/free-solid-svg-icons";
 
 const PercentList = styled.div`
   display: grid;
@@ -18,10 +23,12 @@ const PercentItem = styled.div<IPercentItem>`
 
   span:first-child {
     font-size: 24px;
+    margin-bottom: 10px;
   }
   span:last-child {
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 600;
+    color: ${(props) => (props.isPlus ? "#00B746" : "#ef403c")};
   }
 `;
 
@@ -69,33 +76,95 @@ interface IPercentItem {
 
 function Price() {
   const { state } = useLocation<RouteState>();
-  const { name, symbol, tickersData } = state;
+  const { tickersData } = state;
+  const {
+    percent_change_1h,
+    percent_change_6h,
+    percent_change_24h,
+    percent_change_7d,
+    percent_change_30d,
+    percent_change_1y,
+  } = tickersData.quotes.USD;
   return (
     <>
       <PercentList>
-        <PercentItem isPlus={tickersData.quotes.USD.percent_change_1h > 0}>
+        <PercentItem isPlus={percent_change_1h > 0}>
           <span>Before 1h</span>
-          <span>{tickersData.quotes.USD.percent_change_1h}</span>
+          <span>
+            {percent_change_1h > 0
+              ? `+${percent_change_1h}% `
+              : `${percent_change_1h}% `}
+            {percent_change_1h > 0 ? (
+              <FontAwesomeIcon icon={faArrowTrendUp} />
+            ) : (
+              <FontAwesomeIcon icon={faArrowTrendDown} />
+            )}
+          </span>
         </PercentItem>
-        <PercentItem isPlus={tickersData.quotes.USD.percent_change_6h > 0}>
+        <PercentItem isPlus={percent_change_6h > 0}>
           <span>Before 6h</span>
-          <span>{tickersData.quotes.USD.percent_change_6h}</span>
+          <span>
+            {percent_change_6h > 0
+              ? `+${percent_change_6h}% `
+              : `${percent_change_6h}% `}
+            {percent_change_6h > 0 ? (
+              <FontAwesomeIcon icon={faArrowTrendUp} />
+            ) : (
+              <FontAwesomeIcon icon={faArrowTrendDown} />
+            )}
+          </span>
         </PercentItem>
-        <PercentItem isPlus={tickersData.quotes.USD.percent_change_24h > 0}>
+        <PercentItem isPlus={percent_change_24h > 0}>
           <span>Before 24h</span>
-          <span>{tickersData.quotes.USD.percent_change_24h}</span>
+          <span>
+            {percent_change_24h > 0
+              ? `+${percent_change_24h}% `
+              : `${percent_change_24h}% `}
+            {percent_change_24h > 0 ? (
+              <FontAwesomeIcon icon={faArrowTrendUp} />
+            ) : (
+              <FontAwesomeIcon icon={faArrowTrendDown} />
+            )}
+          </span>
         </PercentItem>
-        <PercentItem isPlus={tickersData.quotes.USD.percent_change_7d > 0}>
+        <PercentItem isPlus={percent_change_7d > 0}>
           <span>Before 7d</span>
-          <span>{tickersData.quotes.USD.percent_change_7d}</span>
+          <span>
+            {percent_change_7d > 0
+              ? `+${percent_change_7d}% `
+              : `${percent_change_7d}% `}
+            {percent_change_7d > 0 ? (
+              <FontAwesomeIcon icon={faArrowTrendUp} />
+            ) : (
+              <FontAwesomeIcon icon={faArrowTrendDown} />
+            )}
+          </span>
         </PercentItem>
-        <PercentItem isPlus={tickersData.quotes.USD.percent_change_30d > 0}>
+        <PercentItem isPlus={percent_change_30d > 0}>
           <span>Before 30d</span>
-          <span>{tickersData.quotes.USD.percent_change_30d}</span>
+          <span>
+            {percent_change_30d > 0
+              ? `+${percent_change_30d}% `
+              : `${percent_change_30d}% `}
+            {percent_change_30d > 0 ? (
+              <FontAwesomeIcon icon={faArrowTrendUp} />
+            ) : (
+              <FontAwesomeIcon icon={faArrowTrendDown} />
+            )}
+          </span>
         </PercentItem>
-        <PercentItem isPlus={tickersData.quotes.USD.percent_change_1y > 0}>
+        <PercentItem isPlus={percent_change_1y > 0}>
           <span>Before 1y</span>
-          <span>{tickersData.quotes.USD.percent_change_1y}</span>
+          <span>
+            {percent_change_1y > 0
+              ? `+${percent_change_1y}% `
+              : `${percent_change_1y}% `}
+            {percent_change_1y > 0 ? (
+              <FontAwesomeIcon icon={faArrowTrendUp} />
+            ) : (
+              <FontAwesomeIcon icon={faArrowTrendDown} />
+            )}
+          </span>
         </PercentItem>
       </PercentList>
     </>
