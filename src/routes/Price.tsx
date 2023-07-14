@@ -1,10 +1,53 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowTrendUp,
   faArrowTrendDown,
 } from "@fortawesome/free-solid-svg-icons";
+
+const priceAppear = keyframes`
+  0% {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+`;
+
+const CurrentPriceInfo = styled.div<IPercentItem>`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  padding: 15px 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  animation: ${priceAppear} 1s ease-in-out;
+
+  h1 {
+    font-size: 48px;
+    font-weight: 600;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    span:last-child {
+      margin-top: 5px;
+      font-size: 28px;
+      font-weight: 600;
+      color: ${(props) => (props.isPlus ? "#00B746" : "#ef403c")};
+    }
+  }
+`;
 
 const PercentList = styled.div`
   display: grid;
@@ -20,6 +63,8 @@ const PercentItem = styled.div<IPercentItem>`
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px 0px;
   border-radius: 15px;
+
+  animation: ${priceAppear} 1s ease-in-out;
 
   span:first-child {
     font-size: 24px;
@@ -84,9 +129,17 @@ function Price() {
     percent_change_7d,
     percent_change_30d,
     percent_change_1y,
+    price,
   } = tickersData.quotes.USD;
   return (
     <>
+      <CurrentPriceInfo isPlus={percent_change_1h > 0}>
+        <h1>Price</h1>
+        <div>
+          <span>{tickersData.last_updated}</span>
+          <span>{`$${price.toFixed(2)}`}</span>
+        </div>
+      </CurrentPriceInfo>
       <PercentList>
         <PercentItem isPlus={percent_change_1h > 0}>
           <span>Before 1h</span>
