@@ -67,11 +67,9 @@ interface ICoin {
   type: string;
 }
 
-interface ICoinsProps {
-  toggleDark: () => void;
-}
+interface ICoinsProps {}
 
-function Coins({ toggleDark }: ICoinsProps) {
+function Coins({}: ICoinsProps) {
   /*
   const [coins, setCoins] = useState<CoinInterface[]>([]); // useState()에서는 Generic을 이용해 type을 지정해 준다.
   const [loading, setLoading] = useState(true); // React-query에서는 Loading을 이렇게 하지는 않음.
@@ -103,7 +101,6 @@ function Coins({ toggleDark }: ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Coins</Title>
-        <button onClick={toggleDark}>Toggle Mode</button>
       </Header>
       {isLoading ? (
         <Loader>"Loading ... "</Loader>

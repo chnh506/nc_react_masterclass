@@ -2,12 +2,10 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Coin from "./routes/Coin";
 import Coins from "./routes/Coins";
 
-interface IRouterProps {
-  toggleDark: () => void;
-}
+interface IRouterProps {}
 
 // Switch : 한 번에 하나의 Route를 렌더링할 수 있는 방법.
-function Router({ toggleDark }: IRouterProps) {
+function Router({}: IRouterProps) {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Switch>
@@ -15,7 +13,7 @@ function Router({ toggleDark }: IRouterProps) {
           <Coin />
         </Route>
         <Route path="/">
-          <Coins toggleDark={toggleDark} />
+          <Coins />
         </Route>
       </Switch>
     </BrowserRouter>
