@@ -26,10 +26,11 @@ const Loader = styled.span`
 const CoinsList = styled.ul``;
 
 const CoinElem = styled.li`
-  background-color: whitesmoke;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 20px;
+  border: 1px solid white;
 
   img {
     width: 32px;
@@ -66,7 +67,11 @@ interface ICoin {
   type: string;
 }
 
-function Coins() {
+interface ICoinsProps {
+  toggleDark: () => void;
+}
+
+function Coins({ toggleDark }: ICoinsProps) {
   /*
   const [coins, setCoins] = useState<CoinInterface[]>([]); // useState()에서는 Generic을 이용해 type을 지정해 준다.
   const [loading, setLoading] = useState(true); // React-query에서는 Loading을 이렇게 하지는 않음.
@@ -98,6 +103,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleDark}>Toggle Mode</button>
       </Header>
       {isLoading ? (
         <Loader>"Loading ... "</Loader>
