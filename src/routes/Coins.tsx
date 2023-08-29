@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../apifetch";
 import { Helmet } from "react-helmet";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0 20px;
@@ -88,6 +90,10 @@ function Coins({}: ICoinsProps) {
   // react-query는 데이터를 캐시에 저장해 두기 때문에, 다른 screen에 갔다가 다시 'Coins’ screen으로 돌아와도 로딩이 한번 더 일어나지 않는다!!
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
+  // recoil atom의 값을 설정(set)하는 함수.
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
   return (
     <Container>
       <Helmet>
@@ -101,6 +107,7 @@ function Coins({}: ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button onClick={toggleDarkAtom}>Toggle Mode</button>
       </Header>
       {isLoading ? (
         <Loader>"Loading ... "</Loader>
