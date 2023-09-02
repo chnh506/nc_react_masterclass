@@ -1,10 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import Router from "./Router";
-import { ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from "./theme";
-import { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { isDarkAtom } from "./atoms";
 
 const GlobalStyle = createGlobalStyle`
   /* http://meyerweb.com/eric/tools/css/reset/
@@ -74,14 +68,9 @@ a {
 `;
 
 function App() {
-  // recoil의 useRecoilValue() 함수를 사용해서 atom을 사용한다.
-  const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <GlobalStyle />
-        <Router />
-      </ThemeProvider>
+      <GlobalStyle />
     </>
   );
 }
